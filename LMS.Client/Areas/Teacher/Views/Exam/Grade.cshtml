@@ -1,0 +1,29 @@
+﻿@model GradeExamResultVM
+@{
+    ViewData["Title"] = "Grade Exam";
+    ViewBag.CardTitle = "Grade / Edit result";
+}
+
+<form asp-action="Grade" method="post">
+	<input type="hidden" asp-for="ExamResultId" />
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Score" class="form-label"></label>
+        <input asp-for="Score" class="form-control" />
+        <span asp-validation-for="Score" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Remarks" class="form-label"></label>
+        <textarea asp-for="Remarks" rows="3" class="form-control"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</form>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+ }
