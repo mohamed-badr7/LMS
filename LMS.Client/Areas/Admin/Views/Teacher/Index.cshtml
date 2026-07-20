@@ -1,0 +1,77 @@
+﻿@{
+    ViewBag.Title = "Teacher Management";
+    ViewBag.CardTitle = "View Teachers";
+}
+
+<table id="teachersTable" class="table table-hover" width="100%">
+    <thead class="text-bold">
+        <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Hire Date</th>
+            <th>Qualification</th>
+            <th>Experience (Years)</th>
+            <th>Actions</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+</table>
+
+<br />
+<a asp-action="Create" class="btn btn-primary">Create New Teacher</a>
+
+@section Scripts {
+    <script>
+              var teacherTable;
+              $(document).ready(function () {
+                  loadTeachers();
+              });
+
+              function loadTeachers() {
+                  teacherTable = $("#teachersTable").DataTable({
+                      ajax: {
+                          url: "@Url.Action("GetTeacherList", "Teacher", new { area = "Admin" })",
+                          dataSrc: "data"
+                      },
+                      columns: [
+                          { data: "fullName" },
+                          { data: "email" },
+                          {
+                              data: "hireDate",
+                              render: function (d) {
+                                  return d ? new Date(d).toLocaleDateString() : "";
+                              }
+                          },
+                          { data: "qualification" },
+                          { data: "experience" },
+                          {
+                              data: "teacherId",
+                              orderable: false,
+                              className: "text-center",
+                              render: function (id) {
+                                  return `
+        <div class="d-flex gap-2 justify-content-center">
+          <a href="/Admin/Teacher/Details/${id}" class="btn btn-info btn-sm">Details</a>
+          <a href="/Admin/Teacher/Edit/${id}"    class="btn btn-warning btn-sm">Edit</a>
+          <a href="/Admin/Teacher/ChangeStatus/${id}" class="btn btn-secondary btn-sm">
+             Change Status
+          </a>
+        </div>`;
+                              }
+                          },
+                          {
+                              data: "isLocked",
+                              render: function (s) {
+                                  return s === "Locked"
+                                      ? '<span class="badge bg-danger">Locked</span>'
+                                      : '<span class="badge bg-success">Active</span>';
+                              }
+                          }
+                      ],
+                      order: [[0, "asc"]],
+                      responsive: true,
+                      autoWidth: true
+                  });
+              }
+    </script>
+}
